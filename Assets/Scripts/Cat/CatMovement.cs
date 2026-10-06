@@ -47,8 +47,7 @@ public class CatMovement : MonoBehaviour
 
         if (config == null)
         {
-            Debug.LogError("CatMotor: falta asignar el CatMovementConfig", this);
-            enabled = false;
+            Debug.LogError("CatMovement: falta asignar el CatMoveConfig", this); enabled = false;
         }
     }
 
