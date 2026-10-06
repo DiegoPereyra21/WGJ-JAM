@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// contrato de input: el movement solo conoce esto, no el Input System
+// contrato de input de movimiento: el movimiento solo conoce esto, no el Input System
 public interface IMoveInput
 {
     Vector2 Move { get; }
@@ -10,18 +10,26 @@ public interface IMoveInput
     bool JumpHeld { get; }
 }
 
+// contrato de input de reinicio
+public interface IRestartInput
+{
+    bool RestartHeld { get; }
+}
+
 // lee el teclado / gamepad y bloquea el cursor
-public class CatInput : MonoBehaviour, IMoveInput
+public class CatInput : MonoBehaviour, IMoveInput, IRestartInput
 {
     [SerializeField] bool lockCursor = true;
 
     InputAction moveAction;
     InputAction jumpAction;
+    InputAction restartAction;
 
     public Vector2 Move => moveAction.ReadValue<Vector2>();
     public bool JumpPressedThisFrame => jumpAction.WasPressedThisFrame();
     public bool JumpReleasedThisFrame => jumpAction.WasReleasedThisFrame();
     public bool JumpHeld => jumpAction.IsPressed();
+    public bool RestartHeld => restartAction.IsPressed();
 
     void Awake()
     {
@@ -39,18 +47,25 @@ public class CatInput : MonoBehaviour, IMoveInput
         jumpAction = new InputAction("Jump", InputActionType.Button);
         jumpAction.AddBinding("<Keyboard>/space");
         jumpAction.AddBinding("<Gamepad>/buttonSouth");
+
+        // crea el input de reinicio (R, select del gamepad)
+        restartAction = new InputAction("Restart", InputActionType.Button);
+        restartAction.AddBinding("<Keyboard>/r");
+        restartAction.AddBinding("<Gamepad>/select");
     }
 
     void OnEnable()
     {
         moveAction.Enable();
         jumpAction.Enable();
+        restartAction.Enable();
     }
 
     void OnDisable()
     {
         moveAction.Disable();
         jumpAction.Disable();
+        restartAction.Disable();
     }
 
     void Start()

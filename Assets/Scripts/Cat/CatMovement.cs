@@ -343,4 +343,25 @@ public class CatMovement : MonoBehaviour
         Quaternion target = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, target, speed * dt);
     }
+
+    // teletransporta al gato y reinicia su estado
+    public void TeleportTo(Vector3 position, Quaternion rotation)
+    {
+        controller.enabled = false;
+        transform.SetPositionAndRotation(position, rotation);
+        controller.enabled = true;
+
+        horizontalVel = Vector3.zero;
+        verticalVel = 0f;
+        IsCharging = false;
+        ChargeNormalized = 0f;
+        chargeTime = 0f;
+        IsRolling = false;
+        RollAngle = 0f;
+        landingTimer = 0f;
+        jumpBufferTimer = 0f;
+        coyoteTimer = 0f;
+        apexY = position.y;
+        wasGrounded = true; // evita un aterrizaje falso
+    }
 }
